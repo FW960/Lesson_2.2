@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Lesson_2._2
+namespace Lesson_2._3
 {
     internal class Program
     {
@@ -192,6 +192,8 @@ namespace Lesson_2._2
                 catch
                 {
                     Console.WriteLine("Введите число банковских счетов в корректном формате.");
+
+                    continue;
                 }
                 if (numberOfAccounts < 0 || numberOfAccounts == 0)
                 {
@@ -202,7 +204,7 @@ namespace Lesson_2._2
 
             Bank[] bankAccounts = new Bank[numberOfAccounts];
 
-            (string bankAccountValueType, string bankAccountType)[] bankAccountsValuesAndTypes = new (string, string)[numberOfAccounts];
+            (string bankAccountValueType, string bankAccountType)[] bankAccountsValuesAndTypes = new (string AccountType, string ValueType)[numberOfAccounts];
 
             for (int i = 0; i < bankAccounts.Length; i++)
             {
@@ -217,11 +219,21 @@ namespace Lesson_2._2
 
             do
             {
+                Console.WriteLine("Введите 'Посмотреть', чтобы посмотреть информацию о счете и его номер.");
+
+                Console.WriteLine("Введите 'Снять', чтобы снять деньги со счета.");
+
+                Console.WriteLine("Введите 'Перевести', чтобы перевести деньги с одного счета на другой.");
+
+                Console.WriteLine("Введите 'Очистить', чтобы очистить консоль.");
+
+                Console.WriteLine("Введите 'Выход', чтобы выйти из приложения.");
+
                 UserChoice = Console.ReadLine();
 
                 switch (UserChoice)
                 {
-                    case "Информация":
+                    case "Посмотреть":
                         Console.WriteLine("Введите номер аккаунта.");
 
                         try
@@ -236,16 +248,66 @@ namespace Lesson_2._2
                             }
 
 
-                            bankAccountGetInfo(bankAccounts, bankAccountsValuesAndTypes, --accountNumber);
+                            Bank.bankAccountGetInfo(bankAccounts, bankAccountsValuesAndTypes, --accountNumber);
                         }
                         catch
                         {
-                            Console.WriteLine("Введите номер аккаунта в корректном формате.");
+                            Console.WriteLine("Произошла ошибка.");
 
                             Console.Clear();
                         }
                         break;
+                    case "Снять":
+                        try
+                        {
+                            Console.WriteLine("Введите номер счета, с которого хотите снять деньги.");
 
+                            int BankAccountNum = Convert.ToInt32(Console.ReadLine());
+
+                            Console.WriteLine("Введите сумму, которую хотите снять.");
+
+                            int WithdrawSumOfMoney = Convert.ToInt32(Console.ReadLine());
+
+                            Bank.WithdrawMoney(bankAccounts, bankAccountsValuesAndTypes, BankAccountNum, WithdrawSumOfMoney);
+
+                        }
+                        catch
+                        {
+                            Console.WriteLine("Произошла ошибка");
+
+                            break;
+                        }
+                        break;
+                    case "Перевести":
+
+                        try
+                        {
+                            Console.WriteLine("Введите номер счета с которого вы хотите перевести сумму.");
+
+                            int SourceBankAccount = Convert.ToInt32(Console.ReadLine());
+
+                            Console.WriteLine("Введите сумму, которую вы хотели бы перевести.");
+
+                            int TransferSumOfMoney = Convert.ToInt32(Console.ReadLine());
+
+                            Console.WriteLine("Введите счет, на который вы хотели бы перевести сумму.");
+
+                            int DestinationBankAccount = Convert.ToInt32(Console.ReadLine());
+
+                            Bank.TransferMoney(bankAccounts, bankAccountsValuesAndTypes, SourceBankAccount, DestinationBankAccount, TransferSumOfMoney);
+
+                            Console.WriteLine("Введите номер счета в корректном формате.");
+
+                        }
+                        catch
+                        {
+                            Console.WriteLine("Произошла.");
+                            break;
+                        }
+                        break;
+                    case "Очистить":
+                        Console.Clear();
+                        break;
                     case "Выход":
                         break;
                     default:
@@ -255,87 +317,160 @@ namespace Lesson_2._2
             } while (UserChoice != "Выход");
 
         }
-        static void bankAccountGetInfo(Bank[] bank, (string bankAccountValueType, string bankAccountType)[] bankAccountsValuesAndTypes, int bankAccountNumber)
-        {
-            Console.WriteLine($"Номер счета: {bank[bankAccountNumber].BankAccountNumber}");
-
-            Console.WriteLine($"Баланс: {bank[bankAccountNumber].Balance} {bankAccountsValuesAndTypes[bankAccountNumber].bankAccountValueType}");
-
-            Console.WriteLine($"Тип счета: {bankAccountsValuesAndTypes[bankAccountNumber].bankAccountType}");
-        }
-
-
+        
     }
-    public class Bank
-    {
-        public static int LastBankAccountNumber = (int)BankAccountInfo.bankAccountNumber;
 
-        public static int BankAccountNumberEnumerater()
-        {
-            if (LastBankAccountNumber == 0)
-            {
-                Random random = new Random();
-
-                LastBankAccountNumber = random.Next(40000000, 50000000);
-            }
-
-            int BankAccountNumber = LastBankAccountNumber++;
-
-            return BankAccountNumber;
-
-        }
-
-        private enum BankAccountInfo
-        {
-            bankAccountNumber = 0,
-
-            balance = 0,
-
-            bankAccountType = 1 // 1 Означает то, что это рублевый счет(по умолчанию). 2 Бюджетный счет. 3 Валютный.
-        }
-
-        public Bank()
-        {
-            BankAccountNumber = BankAccountNumberEnumerater();
-
-            Balance = (int)BankAccountInfo.balance;
-
-            BankAccountType = (int)BankAccountInfo.bankAccountType;
-
-        }
-        public Bank(int Balance)
-        {
-
-            BankAccountNumber = BankAccountNumberEnumerater();
-
-            this.Balance = Balance;
-
-            BankAccountType = (int)BankAccountInfo.bankAccountType;
-
-        }
-        public Bank(int NoBalance, int BankAccountType, int RandomNum)
-        {
-            BankAccountNumber = BankAccountNumberEnumerater();
-
-            Balance = (int)BankAccountInfo.balance;
-
-            this.BankAccountType = BankAccountType;
-        }
-        public Bank(int Balance, int BankAccountType)
-        {
-            BankAccountNumber = BankAccountNumberEnumerater();
-
-            this.Balance = Balance;
-
-            this.BankAccountType = BankAccountType;
-        }
-
-
-        public int BankAccountNumber;
-
-        public int Balance = (int)BankAccountInfo.balance;
-
-        public int BankAccountType = (int)BankAccountInfo.bankAccountType;
-
-    }
 }
+
+
+public class Bank
+{
+    public static void bankAccountGetInfo(Bank[] bank, (string bankAccountValueType, string bankAccountType)[] bankAccountsValuesAndTypes, int bankAccountNumber)
+    {
+        Console.WriteLine($"Номер счета: {bank[bankAccountNumber].BankAccountNumber}");
+
+        Console.WriteLine($"Баланс: {bank[bankAccountNumber].Balance} {bankAccountsValuesAndTypes[bankAccountNumber].bankAccountValueType}");
+
+        Console.WriteLine($"Тип счета: {bankAccountsValuesAndTypes[bankAccountNumber].bankAccountType}");
+    }
+    public static void WithdrawMoney(Bank[] bankAccounts, (string ValueType, string AccountType)[] bankAccountsValuesAndTypes, int BankAccountNum, int SumOfMoney)
+    {
+
+        for (int i = 0; i < bankAccounts.Length; i++)
+        {
+            if (bankAccounts[i].BankAccountNumber == BankAccountNum || bankAccounts[i].Balance >= SumOfMoney)
+            {
+                if (SumOfMoney <= 0)
+                {
+                    Console.WriteLine($"Вы не можете снять {SumOfMoney} {bankAccountsValuesAndTypes[i].ValueType}.");
+
+                    return;
+                }
+
+                bankAccounts[i].Balance = bankAccounts[i].Balance - SumOfMoney;
+
+                Console.WriteLine($"Со счета {bankAccounts[i].BankAccountNumber} успешно снято {SumOfMoney} {bankAccountsValuesAndTypes[i].ValueType}. Остаток: {bankAccounts[i].Balance} {bankAccountsValuesAndTypes[i].ValueType}");
+
+                return;
+
+            }
+            if (bankAccounts[i].BankAccountNumber - 1 == i)
+            {
+                Console.WriteLine("Счет не существует или на нем недостаточно средств.");
+            }
+        }
+    }
+    public static void TransferMoney(Bank[] bankAccounts, (string ValueType, string AccountType)[] bankAccountsValuesAndTypes, int SourceBankAccount, int DestinationBankAccount, int SumOfMoney)
+    {
+
+        for (int i = 0; i < bankAccounts.Length; i++)
+        {
+            if (bankAccounts[i].BankAccountNumber == SourceBankAccount && bankAccounts[i].Balance >= SumOfMoney)
+            {
+                Console.WriteLine("Введите счет, на который вы хотели бы перевести сумму.");
+
+                for (int j = 0; j < bankAccounts.Length; j++)
+                {
+                    if (bankAccounts[j].BankAccountNumber == DestinationBankAccount && bankAccountsValuesAndTypes[i].ValueType == bankAccountsValuesAndTypes[j].ValueType)
+                    {
+                        if (SumOfMoney <= 0)
+                        {
+                            Console.WriteLine($"Вы не можете перевести {SumOfMoney} {bankAccountsValuesAndTypes[i].ValueType}.");
+
+                            return;
+                        }
+
+                        bankAccounts[i].Balance = bankAccounts[i].Balance - SumOfMoney;
+
+                        bankAccounts[j].Balance = bankAccounts[j].Balance + SumOfMoney;
+
+                        Console.WriteLine($"На счет {bankAccounts[j].BankAccountNumber} успешно зачислено {SumOfMoney} {bankAccountsValuesAndTypes[j].ValueType}. Баланс: {bankAccounts[j].Balance} {bankAccountsValuesAndTypes[j].ValueType}");
+                        return;
+                    }
+                    if (j == bankAccounts.Length - 1)
+                    {
+                        Console.WriteLine("Введенный счет получения не существует или вы пытаетесь перевести деньги на счета разной валютности.");
+                        return;
+                    }
+                }
+            }
+            if (bankAccounts.Length - 1 == i)
+            {
+                Console.WriteLine("Счет не существует или на нем недостаточно средств.");
+                return;
+            }
+        }
+
+    }
+
+    public static int LastBankAccountNumber = (int)BankAccountInfo.bankAccountNumber;
+
+    public static int BankAccountNumberEnumerater()
+    {
+        if (LastBankAccountNumber == 0)
+        {
+            Random random = new Random();
+
+            LastBankAccountNumber = random.Next(40000000, 50000000);
+        }
+
+        int BankAccountNumber = LastBankAccountNumber++;
+
+        return BankAccountNumber;
+
+    }
+
+    private enum BankAccountInfo
+    {
+        bankAccountNumber = 0,
+
+        balance = 0,
+
+        bankAccountType = 1 // 1 Означает то, что это рублевый счет(по умолчанию). 2 Бюджетный счет. 3 Валютный.
+    }
+
+    public Bank()
+    {
+        BankAccountNumber = BankAccountNumberEnumerater();
+
+        Balance = (int)BankAccountInfo.balance;
+
+        BankAccountType = (int)BankAccountInfo.bankAccountType;
+
+    }
+    public Bank(int Balance)
+    {
+
+        BankAccountNumber = BankAccountNumberEnumerater();
+
+        this.Balance = Balance;
+
+        BankAccountType = (int)BankAccountInfo.bankAccountType;
+
+    }
+    public Bank(int NoBalance, int BankAccountType, int RandomNum)
+    {
+        BankAccountNumber = BankAccountNumberEnumerater();
+
+        Balance = (int)BankAccountInfo.balance;
+
+        this.BankAccountType = BankAccountType;
+    }
+    public Bank(int Balance, int BankAccountType)
+    {
+        BankAccountNumber = BankAccountNumberEnumerater();
+
+        this.Balance = Balance;
+
+        this.BankAccountType = BankAccountType;
+    }
+
+
+    public int BankAccountNumber;
+
+    public int Balance = (int)BankAccountInfo.balance;
+
+    public int BankAccountType = (int)BankAccountInfo.bankAccountType;
+
+}
+
