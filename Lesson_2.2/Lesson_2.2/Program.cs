@@ -4,7 +4,7 @@ namespace Lesson_2._2
 {
     internal class Program
     {
-        public static (Bank, (string, string)) bankAccountCreation(Bank bankAccounts, (string bankAccountValueType, string bankAccountType) bankAccountValueAndType, int bankAccountNum)
+        public static (Bank, (string, string)) bankAccountCreation(Bank bankAccounts, (string bankAccountValueType, string bankAccountType) bankAccountValueAndType)
         {
             Console.WriteLine("Введите тип счета, который вы хотели бы открыть.");
 
@@ -25,7 +25,7 @@ namespace Lesson_2._2
 
                         bankAccounts.BankAccountType = Convert.ToInt32(bankAccountValueAndType.bankAccountType);
 
-                        bankAccounts.BankAccountNumber = bankAccounts.BankAccountNumber + bankAccountNum;
+                        bankAccounts.BankAccountNumber = Bank.BankAccountNumberEnumerater();
 
                         bankAccountValueAndType.bankAccountValueType = "RUB";
 
@@ -38,7 +38,7 @@ namespace Lesson_2._2
 
                         bankAccounts.BankAccountType = Convert.ToInt32(bankAccountValueAndType.bankAccountType);
 
-                        bankAccounts.BankAccountNumber = bankAccounts.BankAccountNumber + bankAccountNum;
+                        bankAccounts.BankAccountNumber = Bank.BankAccountNumberEnumerater();
 
                         bankAccountValueAndType.bankAccountValueType = "RUB";
 
@@ -50,14 +50,14 @@ namespace Lesson_2._2
                     case "3":
 
                         bankAccounts.BankAccountType = Convert.ToInt32(bankAccountValueAndType.bankAccountType);
-
-                        bankAccounts.BankAccountNumber = bankAccounts.BankAccountNumber + bankAccountNum;
+                        
+                        bankAccounts.BankAccountNumber = Bank.BankAccountNumberEnumerater();
 
                         bankAccountValueAndType.bankAccountValueType = "USD";
 
                         bankAccountValueAndType.bankAccountType = "Валютный";
 
-                        Console.WriteLine($"Счет {bankAccountNum} успешно создан");
+                        Console.WriteLine($"Счет успешно создан");
 
                         break;
                     default:
@@ -75,6 +75,7 @@ namespace Lesson_2._2
             return (bankAccounts, bankAccountValueAndType);
 
         }
+
         static void Main()
         {
             int numberOfAccounts = 0;
@@ -107,7 +108,7 @@ namespace Lesson_2._2
 
                 bankAccounts[i] = new Bank();
 
-                (bankAccounts[i], bankAccountsValuesAndTypes[i]) = bankAccountCreation(bankAccounts[i], bankAccountsValuesAndTypes[i], i);
+                (bankAccounts[i], bankAccountsValuesAndTypes[i]) = bankAccountCreation(bankAccounts[i], bankAccountsValuesAndTypes[i]);
 
                 Console.Clear();
 
@@ -167,16 +168,35 @@ namespace Lesson_2._2
     }
     public class Bank
     {
+        public static int LastBankAccountNumber = (int)BankAccountInfo.bankAccountNumber;
+
+        public static int BankAccountNumberEnumerater()
+        {
+            if (LastBankAccountNumber == 0)
+            {
+                Random random = new Random();
+
+                LastBankAccountNumber = random.Next(0, 100);
+            }
+
+            int BankAccountNumber = LastBankAccountNumber++;
+
+            return BankAccountNumber;
+
+
+        }
+
         private enum BankAccountInfo
         {
-            bankAccountNumber = 40000000,//Номер самого первого счета.
+            bankAccountNumber = 0,
 
             balance = 0,
 
             bankAccountType = 0 // 1 Означает то, что это рублевый счет. 2 Бюджетный счет. 3 Валютный. 0 В данном случае это значение по умолчанию, которое должно будет измениться на предложенное.
         }
 
-        public int BankAccountNumber = (int)BankAccountInfo.bankAccountNumber;
+
+        public int BankAccountNumber { get; set; }
 
         public int Balance = (int)BankAccountInfo.balance;
 
