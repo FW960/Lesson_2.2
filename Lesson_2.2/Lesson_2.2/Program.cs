@@ -4,7 +4,7 @@ namespace Lesson_2._2
 {
     internal class Program
     {
-        public static (Bank, (string, string)) bankAccountCreation(Bank bankAccounts, (string bankAccountValueType, string bankAccountType) bankAccountValueAndType)
+        public static (Bank, (string, string)) bankAccountCreation(Bank bankAccounts, (string bankAccountValueType, string bankAccountType) bankAccountValueAndType, int FirstBankAccountNum, int i)
         {
             Console.WriteLine("Создание счета.");
 
@@ -22,6 +22,8 @@ namespace Lesson_2._2
 
             int checkCode = 0;
 
+            bankAccounts = new Bank();
+
             do
             {
                 UserChoice = Console.ReadLine();
@@ -29,7 +31,16 @@ namespace Lesson_2._2
                 switch (UserChoice)
                 {
                     case "1":
-                        bankAccounts = new Bank(); bankAccountValueAndType.bankAccountType = "Рублевый"; bankAccountValueAndType.bankAccountValueType = "RUB"; checkCode = 1;
+
+                        bankAccounts.BankAccountNumber = FirstBankAccountNum + i;
+
+                        bankAccounts.Balance = 0;
+
+                        bankAccounts.BankAccountType = 1;
+
+                        bankAccountValueAndType.bankAccountType = "Рублевый";
+
+                        bankAccountValueAndType.bankAccountValueType = "RUB"; checkCode = 1;
                         break;
                     case "2":
                         (int bankAccountType, string bankTypeOfAccount, string bankAccountValueType) cortage = bankTypeBankAccountCreate(bankAccountValueAndType);
@@ -38,7 +49,11 @@ namespace Lesson_2._2
 
                         bankAccountValueAndType.bankAccountValueType = cortage.bankAccountValueType;
 
-                        bankAccounts = new Bank(0, cortage.bankAccountType, 0);
+                        bankAccounts.BankAccountNumber = FirstBankAccountNum + i;
+
+                        bankAccounts.Balance = 0;
+
+                        bankAccounts.BankAccountType = cortage.bankAccountType;
 
                         Console.WriteLine("Счет успешно создан.");
 
@@ -53,7 +68,11 @@ namespace Lesson_2._2
 
                         bankAccountValueAndType.bankAccountValueType = cortage1.bankAccountValueType;
 
-                        bankAccounts = new Bank(cortage1.balance);
+                        bankAccounts.BankAccountNumber = FirstBankAccountNum + i;
+
+                        bankAccounts.Balance = cortage1.balance;
+
+                        bankAccounts.BankAccountType = 1;
 
                         Console.WriteLine("Счет успешно создан.");
 
@@ -69,7 +88,11 @@ namespace Lesson_2._2
 
                         (int balance, string bankTypeOfAccount, string bankAccountValueType) cortage3 = bankBalanceAccountCreate(bankAccountValueAndType);
 
-                        bankAccounts = new Bank(cortage3.balance, cortage2.bankAccountType);
+                        bankAccounts.BankAccountNumber = FirstBankAccountNum + i;
+
+                        bankAccounts.Balance = cortage3.balance;
+
+                        bankAccounts.BankAccountType = cortage2.bankAccountType;
 
                         Console.WriteLine("Счет успешно создан.");
 
@@ -204,10 +227,14 @@ namespace Lesson_2._2
 
             (string bankAccountValueType, string bankAccountType)[] bankAccountsValuesAndTypes = new (string, string)[numberOfAccounts];
 
+            Random random = new Random();
+
+            int FirstBankAccountNum = random.Next(40000000, 50000000);
+
             for (int i = 0; i < bankAccounts.Length; i++)
             {
 
-                (bankAccounts[i], bankAccountsValuesAndTypes[i]) = bankAccountCreation(bankAccounts[i], bankAccountsValuesAndTypes[i]);
+                (bankAccounts[i], bankAccountsValuesAndTypes[i]) = bankAccountCreation(bankAccounts[i], bankAccountsValuesAndTypes[i], FirstBankAccountNum, i);
 
                 Console.Clear();
 
@@ -268,22 +295,7 @@ namespace Lesson_2._2
     }
     public class Bank
     {
-        public static int LastBankAccountNumber = (int)BankAccountInfo.bankAccountNumber;
-
-        public static int BankAccountNumberEnumerater()
-        {
-            if (LastBankAccountNumber == 0)
-            {
-                Random random = new Random();
-
-                LastBankAccountNumber = random.Next(40000000, 50000000);
-            }
-
-            int BankAccountNumber = LastBankAccountNumber++;
-
-            return BankAccountNumber;
-
-        }
+        
 
         private enum BankAccountInfo
         {
@@ -294,48 +306,11 @@ namespace Lesson_2._2
             bankAccountType = 1 // 1 Означает то, что это рублевый счет(по умолчанию). 2 Бюджетный счет. 3 Валютный.
         }
 
-        public Bank()
-        {
-            BankAccountNumber = BankAccountNumberEnumerater();
+        public int BankAccountNumber { get; set; }
 
-            Balance = (int)BankAccountInfo.balance;
+        public int Balance { get; set; } = (int)BankAccountInfo.balance;
 
-            BankAccountType = (int)BankAccountInfo.bankAccountType;
-
-        }
-        public Bank(int Balance)
-        {
-
-            BankAccountNumber = BankAccountNumberEnumerater();
-
-            this.Balance = Balance;
-
-            BankAccountType = (int)BankAccountInfo.bankAccountType;
-
-        }
-        public Bank(int NoBalance, int BankAccountType, int RandomNum)
-        {
-            BankAccountNumber = BankAccountNumberEnumerater();
-
-            Balance = (int)BankAccountInfo.balance;
-
-            this.BankAccountType = BankAccountType;
-        }
-        public Bank(int Balance, int BankAccountType)
-        {
-            BankAccountNumber = BankAccountNumberEnumerater();
-
-            this.Balance = Balance;
-
-            this.BankAccountType = BankAccountType;
-        }
-
-
-        public int BankAccountNumber;
-
-        public int Balance = (int)BankAccountInfo.balance;
-
-        public int BankAccountType = (int)BankAccountInfo.bankAccountType;
+        public int BankAccountType { get; set; } = (int)BankAccountInfo.bankAccountType;
 
     }
 }
