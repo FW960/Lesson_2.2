@@ -4,7 +4,7 @@ namespace Lesson_2._3
 {
     internal class Program
     {
-        public static (Bank, (string, string)) bankAccountCreation(Bank bankAccounts, (string bankAccountValueType, string bankAccountType) bankAccountValueAndType)
+        public static Bank bankAccountCreation(Bank bankAccount)
         {
             Console.WriteLine("Создание счета.");
 
@@ -20,8 +20,6 @@ namespace Lesson_2._3
 
             string UserChoice = string.Empty;
 
-            int checkCode = 0;
-
             do
             {
                 UserChoice = Console.ReadLine();
@@ -29,153 +27,49 @@ namespace Lesson_2._3
                 switch (UserChoice)
                 {
                     case "1":
-                        bankAccounts = new Bank(); bankAccountValueAndType.bankAccountType = "Рублевый"; bankAccountValueAndType.bankAccountValueType = "RUB"; checkCode = 1;
-                        break;
+                        bankAccount = new Bank(); return (bankAccount);
                     case "2":
-                        (int bankAccountType, string bankTypeOfAccount, string bankAccountValueType) cortage = bankTypeBankAccountCreate(bankAccountValueAndType);
+                        int bankAccountType = Bank.bankTypeBankAccountCreate();
 
-                        bankAccountValueAndType.bankAccountType = cortage.bankTypeOfAccount;
-
-                        bankAccountValueAndType.bankAccountValueType = cortage.bankAccountValueType;
-
-                        bankAccounts = new Bank(0, cortage.bankAccountType, 0);
+                        bankAccount = new Bank((float)bankAccountType);
 
                         Console.WriteLine("Счет успешно создан.");
 
-                        checkCode = 1;
+                        return (bankAccount);
 
-                        break;
                     case "3":
 
-                        (int balance, string bankTypeOfAccount, string bankAccountValueType) cortage1 = bankBalanceAccountCreate(bankAccountValueAndType);
+                        int bankBalance = Bank.bankBalanceAccountCreate();
 
-                        bankAccountValueAndType.bankAccountType = cortage1.bankTypeOfAccount;
-
-                        bankAccountValueAndType.bankAccountValueType = cortage1.bankAccountValueType;
-
-                        bankAccounts = new Bank(cortage1.balance);
+                        bankAccount = new Bank(bankBalance);
 
                         Console.WriteLine("Счет успешно создан.");
 
-                        checkCode = 1;
+                        return (bankAccount);
 
-                        break;
                     case "4":
-                        (int bankAccountType, string bankTypeOfAccount, string bankAccountValueType) cortage2 = bankTypeBankAccountCreate(bankAccountValueAndType);
+                        int accountType = Bank.bankTypeBankAccountCreate();
 
-                        bankAccountValueAndType.bankAccountType = cortage2.bankTypeOfAccount;
+                        int balance = Bank.bankBalanceAccountCreate();
 
-                        bankAccountValueAndType.bankAccountValueType = cortage2.bankAccountValueType;
-
-                        (int balance, string bankTypeOfAccount, string bankAccountValueType) cortage3 = bankBalanceAccountCreate(bankAccountValueAndType);
-
-                        bankAccounts = new Bank(cortage3.balance, cortage2.bankAccountType);
+                        bankAccount = new Bank(balance, accountType);
 
                         Console.WriteLine("Счет успешно создан.");
 
-                        checkCode = 1;
+                        return (bankAccount);
 
-                        break;
                     default:
                         Console.WriteLine("Введите команду корректно.");
                         break;
                 }
 
-            } while (checkCode == 0);
+            } while (true);
 
 
-            return (bankAccounts, bankAccountValueAndType);
+
 
         }
-        static (int, string, string) bankTypeBankAccountCreate((string bankAccountValueType, string bankAccountType) bankAccountValueAndType)
-        {
-            Console.WriteLine("Введите тип счета, который вы хотели бы открыть.");
 
-            Console.WriteLine("1 - Рублевый счет");
-
-            Console.WriteLine("2 - Бюджетный счет.");
-
-            Console.WriteLine("3 - Валютный счет.");
-
-            string NewUserChoice = string.Empty;
-
-            int bankAccountType = 0;
-
-            int checkCode = 0;
-
-            do
-            {
-                NewUserChoice = Console.ReadLine();
-
-                if (NewUserChoice == "1" || NewUserChoice == "2" || NewUserChoice == "3")
-                {
-                    bankAccountType = Convert.ToInt32(NewUserChoice);
-
-                    if (bankAccountType == 1)
-                    {
-                        bankAccountValueAndType.bankAccountType = "Рублевый"; bankAccountValueAndType.bankAccountValueType = "RUB";
-                    }
-                    else if (bankAccountType == 2)
-                    {
-                        bankAccountValueAndType.bankAccountType = "Бюджетный"; bankAccountValueAndType.bankAccountValueType = "RUB";
-                    }
-                    else
-                    {
-                        bankAccountValueAndType.bankAccountType = "Валютный"; bankAccountValueAndType.bankAccountValueType = "USD";
-                    }
-
-                    checkCode = 1;
-                }
-                else
-                {
-                    continue;
-                }
-
-            } while (checkCode == 0);
-
-            return (bankAccountType, bankAccountValueAndType.bankAccountType, bankAccountValueAndType.bankAccountValueType);
-        }
-        static (int, string, string) bankBalanceAccountCreate((string bankAccountValueType, string bankAccountType) bankAccountValueAndType)
-        {
-            Console.WriteLine("Введите сумму, которую вы хотите внести на счет.");
-
-            string NewUserChoice = string.Empty;
-
-            int CheckCode = 0;
-
-            int Sum = 0;
-
-            do
-            {
-                try
-                {
-                    int SumOfRubles = Convert.ToInt32(Console.ReadLine());
-
-                    if (SumOfRubles < 0)
-                    {
-                        Console.WriteLine("Вы не можете положить на счет отрицательную сумму.");
-
-                        continue;
-                    }
-                    else
-                    {
-                        bankAccountValueAndType.bankAccountType = "Рублевый"; bankAccountValueAndType.bankAccountValueType = "RUB";
-
-                        Console.WriteLine($"На счет внесена сумма в {SumOfRubles} {bankAccountValueAndType.bankAccountValueType}");
-
-                        Sum = SumOfRubles;
-
-                        CheckCode = 1;
-                    }
-                }
-                catch
-                {
-                    Console.WriteLine("Введите сумму в корректном формате.");
-                }
-            } while (CheckCode == 0);
-
-            return (Sum, bankAccountValueAndType.bankAccountType, bankAccountValueAndType.bankAccountValueType);
-        }
 
         static void Main()
         {
@@ -209,7 +103,7 @@ namespace Lesson_2._3
             for (int i = 0; i < bankAccounts.Length; i++)
             {
 
-                (bankAccounts[i], bankAccountsValuesAndTypes[i]) = bankAccountCreation(bankAccounts[i], bankAccountsValuesAndTypes[i]);
+                bankAccounts[i] = bankAccountCreation(bankAccounts[i]);
 
                 Console.Clear();
 
@@ -217,18 +111,20 @@ namespace Lesson_2._3
 
             string UserChoice = string.Empty;
 
+            Console.WriteLine("Введите 'Посмотреть', чтобы посмотреть информацию о счете и его номер.");
+
+            Console.WriteLine("Введите 'Снять', чтобы снять деньги со счета.");
+
+            Console.WriteLine("Введите 'Перевести', чтобы перевести деньги с одного счета на другой.");
+
+            Console.WriteLine("Введите 'Сравнить', чтобы сравнить тип аккаунтов и их баланс.");
+
+            Console.WriteLine("Введите 'Очистить', чтобы очистить консоль.");
+
+            Console.WriteLine("Введите 'Выход', чтобы выйти из приложения.");
+
             do
             {
-                Console.WriteLine("Введите 'Посмотреть', чтобы посмотреть информацию о счете и его номер.");
-
-                Console.WriteLine("Введите 'Снять', чтобы снять деньги со счета.");
-
-                Console.WriteLine("Введите 'Перевести', чтобы перевести деньги с одного счета на другой.");
-
-                Console.WriteLine("Введите 'Очистить', чтобы очистить консоль.");
-
-                Console.WriteLine("Введите 'Выход', чтобы выйти из приложения.");
-
                 UserChoice = Console.ReadLine();
 
                 switch (UserChoice)
@@ -240,21 +136,12 @@ namespace Lesson_2._3
                         {
                             int accountNumber = Convert.ToInt32(Console.ReadLine());
 
-                            if (accountNumber <= 0 || accountNumber > bankAccounts.Length)
-                            {
-                                Console.WriteLine("Введите существующий номер счета.");
+                            Bank.bankAccountGetInfo(bankAccounts, --accountNumber);
 
-                                break;
-                            }
-
-
-                            Bank.bankAccountGetInfo(bankAccounts, bankAccountsValuesAndTypes, --accountNumber);
                         }
                         catch
                         {
-                            Console.WriteLine("Произошла ошибка.");
-
-                            Console.Clear();
+                            Console.WriteLine("Введите существующий номер счета.");
                         }
                         break;
                     case "Снять":
@@ -268,18 +155,15 @@ namespace Lesson_2._3
 
                             int WithdrawSumOfMoney = Convert.ToInt32(Console.ReadLine());
 
-                            Bank.WithdrawMoney(bankAccounts, bankAccountsValuesAndTypes, BankAccountNum, WithdrawSumOfMoney);
+                            Bank.WithdrawMoney(bankAccounts, BankAccountNum, WithdrawSumOfMoney);
 
                         }
                         catch
                         {
-                            Console.WriteLine("Произошла ошибка");
-
-                            break;
+                            Console.WriteLine("Введите существующий номер счета.");
                         }
                         break;
                     case "Перевести":
-
                         try
                         {
                             Console.WriteLine("Введите номер счета с которого вы хотите перевести сумму.");
@@ -294,15 +178,38 @@ namespace Lesson_2._3
 
                             int DestinationBankAccount = Convert.ToInt32(Console.ReadLine());
 
-                            Bank.TransferMoney(bankAccounts, bankAccountsValuesAndTypes, SourceBankAccount, DestinationBankAccount, TransferSumOfMoney);
-
-                            Console.WriteLine("Введите номер счета в корректном формате.");
+                            Bank.TransferMoney(bankAccounts, SourceBankAccount, DestinationBankAccount, TransferSumOfMoney);
 
                         }
                         catch
                         {
-                            Console.WriteLine("Произошла.");
-                            break;
+                            Console.WriteLine("Введите существующий номер счета.");
+                        }
+                        break;
+                    case "Сравнить":
+                        try
+                        {
+                            Console.WriteLine("Введите номер первого счета для сравнения.");
+
+                            int FirstBankAccount = Convert.ToInt32(Console.ReadLine());
+
+                            Console.WriteLine("Введите номер второго счета для сравнения.");
+
+                            int SecondBankAccount = Convert.ToInt32(Console.ReadLine());
+
+                            if (Bank.Compare(bankAccounts, FirstBankAccount, SecondBankAccount))
+                            {
+                                Console.WriteLine("Счета соответсвуют.");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Счета не соответсвуют.");
+                            }
+
+                        }
+                        catch
+                        {
+                            Console.WriteLine("Введите существующий номер счета.");
                         }
                         break;
                     case "Очистить":
@@ -317,23 +224,21 @@ namespace Lesson_2._3
             } while (UserChoice != "Выход");
 
         }
-        
+
     }
 
 }
-
-
 public class Bank
 {
-    public static void bankAccountGetInfo(Bank[] bank, (string bankAccountValueType, string bankAccountType)[] bankAccountsValuesAndTypes, int bankAccountNumber)
+    public static void bankAccountGetInfo(Bank[] bank, int bankAccountNumber)
     {
         Console.WriteLine($"Номер счета: {bank[bankAccountNumber].BankAccountNumber}");
 
-        Console.WriteLine($"Баланс: {bank[bankAccountNumber].Balance} {bankAccountsValuesAndTypes[bankAccountNumber].bankAccountValueType}");
+        Console.WriteLine($"Баланс: {bank[bankAccountNumber].Balance} {bank[bankAccountNumber].ValueType}");
 
-        Console.WriteLine($"Тип счета: {bankAccountsValuesAndTypes[bankAccountNumber].bankAccountType}");
+        Console.WriteLine($"Тип счета: {bank[bankAccountNumber].AccountType}");
     }
-    public static void WithdrawMoney(Bank[] bankAccounts, (string ValueType, string AccountType)[] bankAccountsValuesAndTypes, int BankAccountNum, int SumOfMoney)
+    public static void WithdrawMoney(Bank[] bankAccounts, int BankAccountNum, int SumOfMoney)
     {
 
         for (int i = 0; i < bankAccounts.Length; i++)
@@ -342,14 +247,14 @@ public class Bank
             {
                 if (SumOfMoney <= 0)
                 {
-                    Console.WriteLine($"Вы не можете снять {SumOfMoney} {bankAccountsValuesAndTypes[i].ValueType}.");
+                    Console.WriteLine($"Вы не можете снять {SumOfMoney} {bankAccounts[i].ValueType}.");
 
                     return;
                 }
 
                 bankAccounts[i].Balance = bankAccounts[i].Balance - SumOfMoney;
 
-                Console.WriteLine($"Со счета {bankAccounts[i].BankAccountNumber} успешно снято {SumOfMoney} {bankAccountsValuesAndTypes[i].ValueType}. Остаток: {bankAccounts[i].Balance} {bankAccountsValuesAndTypes[i].ValueType}");
+                Console.WriteLine($"Со счета {bankAccounts[i].BankAccountNumber} успешно снято {SumOfMoney} {bankAccounts[i].ValueType}. Остаток: {bankAccounts[i].Balance} {bankAccounts[i].ValueType}");
 
                 return;
 
@@ -359,8 +264,9 @@ public class Bank
                 Console.WriteLine("Счет не существует или на нем недостаточно средств.");
             }
         }
+
     }
-    public static void TransferMoney(Bank[] bankAccounts, (string ValueType, string AccountType)[] bankAccountsValuesAndTypes, int SourceBankAccount, int DestinationBankAccount, int SumOfMoney)
+    public static void TransferMoney(Bank[] bankAccounts, int SourceBankAccount, int DestinationBankAccount, int SumOfMoney)
     {
 
         for (int i = 0; i < bankAccounts.Length; i++)
@@ -371,11 +277,11 @@ public class Bank
 
                 for (int j = 0; j < bankAccounts.Length; j++)
                 {
-                    if (bankAccounts[j].BankAccountNumber == DestinationBankAccount && bankAccountsValuesAndTypes[i].ValueType == bankAccountsValuesAndTypes[j].ValueType)
+                    if (bankAccounts[j].BankAccountNumber == DestinationBankAccount && bankAccounts[i].ValueType == bankAccounts[j].ValueType)
                     {
                         if (SumOfMoney <= 0)
                         {
-                            Console.WriteLine($"Вы не можете перевести {SumOfMoney} {bankAccountsValuesAndTypes[i].ValueType}.");
+                            Console.WriteLine($"Вы не можете перевести {SumOfMoney} {bankAccounts[i].ValueType}.");
 
                             return;
                         }
@@ -384,7 +290,7 @@ public class Bank
 
                         bankAccounts[j].Balance = bankAccounts[j].Balance + SumOfMoney;
 
-                        Console.WriteLine($"На счет {bankAccounts[j].BankAccountNumber} успешно зачислено {SumOfMoney} {bankAccountsValuesAndTypes[j].ValueType}. Баланс: {bankAccounts[j].Balance} {bankAccountsValuesAndTypes[j].ValueType}");
+                        Console.WriteLine($"На счет {bankAccounts[j].BankAccountNumber} успешно зачислено {SumOfMoney} {bankAccounts[j].ValueType}. Баланс: {bankAccounts[j].Balance} {bankAccounts[j].ValueType}");
                         return;
                     }
                     if (j == bankAccounts.Length - 1)
@@ -400,10 +306,42 @@ public class Bank
                 return;
             }
         }
-
     }
 
-    public static int LastBankAccountNumber = (int)BankAccountInfo.bankAccountNumber;
+    public static bool Compare(Bank[] bankAccounts, int FirstBankAccount, int SecondBankAccount)
+    {
+        for (int i = 0; i < bankAccounts.Length; i++)
+        {
+            for (int j = 0; j < bankAccounts.Length; j++)
+            {
+                if (bankAccounts[i].BankAccountNumber == FirstBankAccount && bankAccounts[j].BankAccountNumber == SecondBankAccount)
+                {
+                    return bankAccounts[i] == bankAccounts[j];
+                }
+            }
+        }
+        return false;
+    }
+    private enum BankAccountInfo
+    {
+        bankAccountTypeRub = 1,
+
+        bankAccountTypeBudget = 2,
+
+        bankAccountTypeUsd = 3
+    }
+
+    public int BankAccountNumber;
+
+    public int Balance;
+
+    public int BankAccountType;
+
+    public string ValueType;
+
+    public string AccountType;
+
+    public static int LastBankAccountNumber;
 
     public static int BankAccountNumberEnumerater()
     {
@@ -419,23 +357,17 @@ public class Bank
         return BankAccountNumber;
 
     }
-
-    private enum BankAccountInfo
-    {
-        bankAccountNumber = 0,
-
-        balance = 0,
-
-        bankAccountType = 1 // 1 Означает то, что это рублевый счет(по умолчанию). 2 Бюджетный счет. 3 Валютный.
-    }
-
     public Bank()
     {
         BankAccountNumber = BankAccountNumberEnumerater();
 
-        Balance = (int)BankAccountInfo.balance;
+        Balance = 0;
 
-        BankAccountType = (int)BankAccountInfo.bankAccountType;
+        BankAccountType = (int)BankAccountInfo.bankAccountTypeRub;
+
+        ValueType = "RUB";
+
+        AccountType = "Рублевый";
 
     }
     public Bank(int Balance)
@@ -445,16 +377,41 @@ public class Bank
 
         this.Balance = Balance;
 
-        BankAccountType = (int)BankAccountInfo.bankAccountType;
+        BankAccountType = (int)BankAccountInfo.bankAccountTypeRub;
+
+        ValueType = "RUB";
+
+        AccountType = "Рублевый";
 
     }
-    public Bank(int NoBalance, int BankAccountType, int RandomNum)
+    public Bank(float BankAccountType)
     {
         BankAccountNumber = BankAccountNumberEnumerater();
 
-        Balance = (int)BankAccountInfo.balance;
+        Balance = 0;
 
-        this.BankAccountType = BankAccountType;
+        if (BankAccountType == (int)BankAccountInfo.bankAccountTypeRub)
+        {
+            this.BankAccountType = (int)BankAccountInfo.bankAccountTypeRub;
+
+            ValueType = "RUB";
+        }
+        else if (BankAccountType == (int)BankAccountInfo.bankAccountTypeBudget)
+        {
+            this.BankAccountType = (int)BankAccountInfo.bankAccountTypeBudget;
+
+            ValueType = "RUB";
+
+            AccountType = "Бюджетный";
+        }
+        else if (BankAccountType == (int)BankAccountInfo.bankAccountTypeUsd)
+        {
+            this.BankAccountType = (int)BankAccountInfo.bankAccountTypeUsd;
+
+            ValueType = "USD";
+
+            AccountType = "Валютный";
+        }
     }
     public Bank(int Balance, int BankAccountType)
     {
@@ -462,15 +419,120 @@ public class Bank
 
         this.Balance = Balance;
 
-        this.BankAccountType = BankAccountType;
+        if (BankAccountType == (int)BankAccountInfo.bankAccountTypeRub)
+        {
+            this.BankAccountType = (int)BankAccountInfo.bankAccountTypeRub;
+
+            ValueType = "RUB";
+
+            AccountType = "Рублевый";
+        }
+        else if (BankAccountType == (int)BankAccountInfo.bankAccountTypeBudget)
+        {
+            this.BankAccountType = (int)BankAccountInfo.bankAccountTypeBudget;
+
+            ValueType = "RUB";
+
+            AccountType = "Бюджетный";
+        }
+        else if (BankAccountType == (int)BankAccountInfo.bankAccountTypeUsd)
+        {
+            this.BankAccountType = (int)BankAccountInfo.bankAccountTypeUsd;
+
+            ValueType = "USD";
+
+            AccountType = "Валютный";
+        }
     }
 
+    public static int bankTypeBankAccountCreate()
+    {
+        Console.WriteLine("Введите тип счета, который вы хотели бы открыть.");
 
-    public int BankAccountNumber;
+        Console.WriteLine("1 - Рублевый счет");
 
-    public int Balance = (int)BankAccountInfo.balance;
+        Console.WriteLine("2 - Бюджетный счет.");
 
-    public int BankAccountType = (int)BankAccountInfo.bankAccountType;
+        Console.WriteLine("3 - Валютный счет.");
 
+        do
+        {
+            try
+            {
+                int BankAccountType = Convert.ToInt32(Console.ReadLine());
+
+                if (BankAccountType == 1 || BankAccountType == 2 || BankAccountType == 3)
+                {
+                    return BankAccountType;
+                }
+                else
+                {
+                    Console.WriteLine("Введите существующий тип счета.");
+
+                    continue;
+                }
+            }
+            catch
+            {
+                Console.WriteLine("Введите тип счета в корректном формате.");
+            }
+
+
+        } while (true);
+    }
+    public static int bankBalanceAccountCreate()
+    {
+        Console.WriteLine("Введите сумму, которую вы хотите внести на счет.");
+
+        do
+        {
+            try
+            {
+                int SumOfRubles = Convert.ToInt32(Console.ReadLine());
+
+                if (SumOfRubles < 0)
+                {
+                    Console.WriteLine("Вы не можете положить на счет отрицательную сумму.");
+
+                    continue;
+                }
+                else
+                {
+                    return SumOfRubles;
+                }
+            }
+            catch
+            {
+                Console.WriteLine("Введите сумму в корректном формате.");
+            }
+        } while (true);
+    }
+
+    public static bool operator ==(Bank First, Bank Second)
+    {
+        return (First.BankAccountType == Second.BankAccountType && First.Balance == Second.Balance);
+    }
+    public static bool operator !=(Bank first, Bank second)
+    {
+        return (first.BankAccountType != second.BankAccountType || first.Balance != second.Balance);
+    }
+    public bool Equals(Bank toCompareAccount)
+    {
+        return (Balance == toCompareAccount.Balance && BankAccountType == toCompareAccount.BankAccountType);
+    }
+    public override int GetHashCode()
+    {
+        int hashCode = LastBankAccountNumber - BankAccountNumber;
+
+        return hashCode;
+    }
+    public override string ToString()
+    {
+        string bankAccountInfo = @$"Номер счета: {BankAccountNumber}
+Баланс: {Balance} {ValueType}
+Тип счета: {AccountType}";
+
+        return bankAccountInfo;
+    }
 }
 
